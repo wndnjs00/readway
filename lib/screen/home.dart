@@ -44,9 +44,10 @@ class _HomeScreenState extends State<HomeScreen> {
   // 사이즈 5개짜리의 책 랜덤리스트를 만든다
   void prepareBookList() {
     for (int i = 0; i < 5; i++) {
-      var book = Book();
-      book.name = "Book $i";
-      book.imageUrl = "https://picsum.photos/200/350?random=$i";
+      var name = "Book $i";
+      var imageUrl = "https://picsum.photos/200/350?random=$i";
+      var book = Book(name: name, imageUrl: imageUrl);
+
       books.add(book);
     }
   }
