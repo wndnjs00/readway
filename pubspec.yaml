@@ -37,6 +37,9 @@ dependencies:
   carousel_slider: ^5.1.1
   http: ^1.6.0
   convert: ^3.1.2
+  firebase_core: ^4.2.1
+  firebase_database: ^12.0.4
+  randomstring_dart: ^0.0.4
 
 dev_dependencies:
   flutter_test:

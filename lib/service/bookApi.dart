@@ -13,7 +13,6 @@ class BookApi {
           convert.jsonDecode(response.body) as Map<String, dynamic>;
       print("jsonResponse ${jsonResponse}");
 
-      var itemCount = jsonResponse['totalItems'];
       final books = <Book>[];
 
       for (final item in jsonResponse['items'] as List) {

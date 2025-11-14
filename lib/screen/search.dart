@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:readway/service/bookApi.dart';
+import 'package:readway/widget/bookCoverBox.dart';
 
 import '../model/Book.dart';
+import 'detail.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
@@ -15,6 +17,11 @@ class _SearchScreenState extends State<SearchScreen> {
   TextEditingController _searchController = TextEditingController();
   bool _isLoading = false;
   bool _hasSearched = false; // 검색여부 확인
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   Future<void> searchBook(String keyword) async {
     if (keyword.trim().isEmpty) return;
@@ -63,33 +70,33 @@ class _SearchScreenState extends State<SearchScreen> {
       // 검색결과 있음
       content = GridView.builder(
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
+          crossAxisCount: 3,
           childAspectRatio: 0.7,
           crossAxisSpacing: 16.0,
           mainAxisSpacing: 16.0,
         ),
         itemCount: books.length,
         itemBuilder: (context, index) {
-          return InkWell(
-            // TODO: GridVeiw 클릭했을때
-            onTap: () {},
+          return GestureDetector(
+            // GridVeiw 클릭했을때 -> DetailScreen이동
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => DetailScreen(book: books[index]),
+                ),
+              );
+            },
             child: Container(
-              decoration: books[index].imageUrl.isNotEmpty
-                  ? BoxDecoration(
-                      image: DecorationImage(
-                        image: NetworkImage(books[index].imageUrl),
-                        fit: BoxFit.cover,
-                      ),
-                    )
-                  : null,
-              child: books[index].imageUrl.isNotEmpty
-                  ? null
-                  : Center(
-                      child: Text(
-                        books[index].name,
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
+              child: BookCoverBox(
+                imageUrl: books[index].imageUrl,
+                name: books[index].name,
+                bookKey: books[index].bookKey,
+                pageCount: books[index].pageCount,
+                publisher: books[index].publisher,
+                description: books[index].description,
+                publishedDate: books[index].publishedDate,
+              ),
             ),
           );
         },
