@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../model/Book.dart';
 import '../service/databaseService.dart';
+import 'package:localization/localization.dart';
 
 class DetailScreen extends StatefulWidget {
   final Book book;
@@ -67,7 +68,7 @@ class _DetailScreenState extends State<DetailScreen>{
     if (inputMyReadCount == null || inputMyReadCount < 0 || inputMyReadCount > widget.book.pageCount) {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(const SnackBar(content: Text("Please enter a valid page number.")));
+      ).showSnackBar(SnackBar(content: Text('please-enter-a-valid-page-number'.i18n())));
       return;
     }
 
@@ -96,7 +97,7 @@ class _DetailScreenState extends State<DetailScreen>{
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Detail page",
+          'detail-page'.i18n(),
           style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
       ),
@@ -146,7 +147,7 @@ class _DetailScreenState extends State<DetailScreen>{
                         ),
                         Text(widget.book.publisher),
                         Text(
-                          "Published Date: ${widget.book.publishedDate}",
+                          "published-date ${widget.book.publishedDate}".i18n(),
                           style: const TextStyle(color: Colors.grey),
                         ),
                       ],
@@ -171,8 +172,8 @@ class _DetailScreenState extends State<DetailScreen>{
 
               const SizedBox(height: 30),
 
-              const Text(
-                "Reading Progress",
+              Text(
+                "reading-progress".i18n(),
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
@@ -196,7 +197,7 @@ class _DetailScreenState extends State<DetailScreen>{
                     ),
                   ),
                   const SizedBox(width: 8),
-                  Text(" / ${widget.book.pageCount} page"),
+                  Text(" / ${widget.book.pageCount} page".i18n()),
 
                   const Spacer(),
 
@@ -206,7 +207,7 @@ class _DetailScreenState extends State<DetailScreen>{
                       backgroundColor: Colors.brown,
                       foregroundColor: Colors.white,
                     ),
-                    child: const Text("Save"),
+                    child: Text("save".i18n()),
                   ),
                 ],
               ),
@@ -228,14 +229,14 @@ class _DetailScreenState extends State<DetailScreen>{
               const SizedBox(height: 5),
 
               Text(
-                "${(progressPercent * 100).toStringAsFixed(1)}% Completed",
+                "${(progressPercent * 100).toStringAsFixed(1)}% completed".i18n(),
                 style: const TextStyle(fontSize: 12, color: Colors.grey),
               ),
 
               const SizedBox(height: 40),
 
-              const Text(
-                "my review",
+              Text(
+                "my-review".i18n(),
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
@@ -250,7 +251,7 @@ class _DetailScreenState extends State<DetailScreen>{
                   controller: reviewController,
                   maxLines: 5,
                   decoration: InputDecoration(
-                    hintText: "Share your thoughts about this book...",
+                    hintText: "share-your-thoughts-about-this-book".i18n(),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
@@ -265,7 +266,7 @@ class _DetailScreenState extends State<DetailScreen>{
                     foregroundColor: Colors.white,
                     minimumSize: const Size.fromHeight(48),
                   ),
-                  child: const Text("Submit Review"),
+                  child: Text("submit-review".i18n()),
                 ),
               ]
               // 리뷰가 있을 때 → 완료 UI
@@ -280,8 +281,8 @@ class _DetailScreenState extends State<DetailScreen>{
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        "● Completed",
+                      Text(
+                        "complete".i18n(),
                         style: TextStyle(color: Colors.brown, fontSize: 12),
                       ),
                       const SizedBox(height: 10),
@@ -301,7 +302,7 @@ class _DetailScreenState extends State<DetailScreen>{
                     foregroundColor: Colors.white,
                     minimumSize: const Size.fromHeight(48),
                   ),
-                  child: const Text("Edit"),
+                  child: Text("edit".i18n()),
                 ),
               ],
             ],

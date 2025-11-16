@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:localization/localization.dart';
 import 'package:readway/screen/home.dart';
 import 'package:readway/screen/search.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -26,13 +28,33 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    LocalJsonLocalization.delegate.directories = ['lib/i18n'];
+
     return MaterialApp(
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        LocalJsonLocalization.delegate,
+        MapLocalization.delegate,
+      ],
+
+      localeResolutionCallback: (locale, supportedLocales) {
+        if (supportedLocales.contains(locale)) {
+          return locale;
+        }
+        if (locale?.languageCode == 'ko') {
+          return Locale('ko', 'KR');
+        }
+        return Locale('en', 'US');
+      },
+
       home: Scaffold(
         body: screens[currentIndex],
         bottomNavigationBar: BottomNavigationBar(
           items: [
-            BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-            BottomNavigationBarItem(icon: Icon(Icons.search), label: "Search"),
+            BottomNavigationBarItem(icon: Icon(Icons.home), label: "home".i18n()),
+            BottomNavigationBarItem(icon: Icon(Icons.search), label: "search".i18n()),
           ],
           currentIndex: currentIndex,
           onTap: (index) {

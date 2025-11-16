@@ -1,4 +1,5 @@
 import 'package:firebase_database/firebase_database.dart';
+import 'package:localization/localization.dart';
 
 import '../model/Book.dart';
 
@@ -65,10 +66,10 @@ class DatabaseService {
           "publishedDate": book.publishedDate,
         })
         .then((_) {
-          print("책 정보 저장 완료");
+          print("book-information-saved".i18n());
         })
         .catchError((error) {
-          print("책 정보 저장 실패");
+          print("failed-to-save-book-information".i18n());
         });
 
     if (book.myReadCount != null || book.myReview != null) {
@@ -86,9 +87,9 @@ class DatabaseService {
       
       if (userData.isNotEmpty) {
         await userDataRef.update(userData).then((_) {
-          print("사용자 데이터 저장 완료");
+          print("user-data-saved".i18n());
         }).catchError((error) {
-          print("사용자 데이터 저장 실패");
+          print("failed-to-save-user-data".i18n());
         });
       }
     }
@@ -104,10 +105,10 @@ class DatabaseService {
     bookKeyRef
         .update(bookData)
         .then((_) {
-          print("데이터 업데이트 완료");
+          print("data-updated".i18n());
         })
         .catchError((error) {
-          print("데이터 업데이트 실패");
+          print("failed-to-update-data".i18n());
         });
   }
 

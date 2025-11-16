@@ -1,3 +1,5 @@
+import 'package:localization/localization.dart';
+
 class Book {
   String name;
   String imageUrl;
@@ -24,13 +26,13 @@ class Book {
   factory Book.fromJson(Map<String, dynamic> json) {
     final volumeInfo = json['volumeInfo'];
     final bookKey = json['id'];
-    final name = volumeInfo['title'] ?? 'Title not available';
+    final name = volumeInfo['title'] ?? 'title-not-available'.i18n();
     final imageLinks = volumeInfo['imageLinks'] ?? {};
     final pageCount = volumeInfo['pageCount'] ?? 0;
     final imageUrl = imageLinks['thumbnail'] ?? '';
-    final publisher = volumeInfo['publisher'] ?? 'Publisher not available';
-    final description = volumeInfo['description'] ?? 'Description not available';
-    final publishedDate = volumeInfo['publishedDate'] ?? 'Published date not available';
+    final publisher = volumeInfo['publisher'] ?? 'publisher-not-available'.i18n();
+    final description = volumeInfo['description'] ?? 'description-not-available'.i18n();
+    final publishedDate = volumeInfo['publishedDate'] ?? 'published-date-not-available'.i18n();
 
     return Book(
       name: name,

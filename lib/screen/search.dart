@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:localization/localization.dart';
 import 'package:readway/service/bookApi.dart';
 import 'package:readway/widget/bookCoverBox.dart';
 
@@ -52,17 +53,17 @@ class _SearchScreenState extends State<SearchScreen> {
       );
     } else if (!_hasSearched) {
       // 검색전 (아무것도 안한상태)
-      content = const Center(
+      content = Center(
         child: Text(
-          "Search for something",
+          "search-for-something".i18n(),
           style: TextStyle(fontSize: 18, color: Colors.grey),
         ),
       );
     } else if (books.isEmpty) {
       // 검색결과 없음
-      content = const Center(
+      content = Center(
         child: Text(
-          "No results found",
+          "no-results-found".i18n(),
           style: TextStyle(fontSize: 18, color: Colors.grey),
         ),
       );
@@ -124,7 +125,7 @@ class _SearchScreenState extends State<SearchScreen> {
                         style: TextStyle(color: Colors.black),
                         controller: _searchController,
                         decoration: InputDecoration(
-                          hintText: "Search for a book",
+                          hintText: "search-for-a-book".i18n(),
                           hintStyle: Theme.of(context).textTheme.bodyMedium
                               ?.copyWith(fontSize: 20, color: Colors.grey),
                           border: InputBorder.none,

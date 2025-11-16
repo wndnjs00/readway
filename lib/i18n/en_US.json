@@ -1,0 +1,38 @@
+{
+  "title-not-available": "Title not available",
+  "publisher-not-available": "Publisher not available",
+  "description-not-available": "Description not available",
+  "published-date-not-available": "Published date not available",
+
+  "please-enter-a-valid-page-number": "Please enter a valid page number.",
+  "detail-page": "Detail page",
+  "published-date": "Published date: ",
+  "reading-progress": "Reading Progress",
+  "page": "page",
+  "save": "Save",
+  "completed": "Completed",
+  "my-review": "my review",
+  "share-your-thoughts-about-this-book": "Share your thoughts about this book...",
+  "submit-review": "Submit Review",
+  "complete": "● Completed",
+  "edit": "Edit",
+
+  "no-liked-books-add-a-bookshelf": "No liked books\nAdd a bookshelf",
+
+  "search-for-something": "Search for something",
+  "no-results-found": "No results found",
+  "search-for-a-book": "Search for a book",
+
+  "error": "Error",
+
+  "home": "Home",
+  "search": "Search",
+
+  "book-information-saved": "Book information saved",
+  "failed-to-save-book-information": "Failed to save book information",
+  "user-data-saved": "User data saved",
+  "failed-to-save-user-data": "Failed to save user data",
+  "data-updated": "Data updated",
+  "failed-to-update-data": "Failed to update data"
+
+}

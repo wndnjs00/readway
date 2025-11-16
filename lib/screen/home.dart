@@ -1,5 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:localization/localization.dart';
 import 'package:readway/screen/detail.dart';
 import 'package:readway/service/databaseService.dart';
 
@@ -38,8 +39,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 alignment: Alignment.center,
                 child: books.isNotEmpty
                     ? _buildBookList(context, books)
-                    : const Text(
-                        "No liked books\nAdd a bookshelf",
+                    : Text(
+                        "no-liked-books-add-a-bookshelf".i18n(),
                         textAlign: TextAlign.center,
                         style: TextStyle(fontSize: 18, color: Colors.grey),
                       ),
