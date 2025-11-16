@@ -96,6 +96,8 @@ class _SearchScreenState extends State<SearchScreen> {
                 publisher: books[index].publisher,
                 description: books[index].description,
                 publishedDate: books[index].publishedDate,
+                myReadCount: books[index].myReadCount ?? 0,
+                myReview: books[index].myReview ?? '',
               ),
             ),
           );

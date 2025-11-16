@@ -1,5 +1,3 @@
-import 'package:randomstring_dart/randomstring_dart.dart';
-
 class Book {
   String name;
   String imageUrl;
@@ -8,6 +6,8 @@ class Book {
   String publisher;
   String description;
   String publishedDate;
+  int? myReadCount;
+  String? myReview;
 
   Book({
     required this.name,
@@ -17,10 +17,13 @@ class Book {
     required this.publisher,
     required this.description,
     required this.publishedDate,
+    required this.myReadCount,
+    required this.myReview,
   });
 
   factory Book.fromJson(Map<String, dynamic> json) {
     final volumeInfo = json['volumeInfo'];
+    final bookKey = json['id'];
     final name = volumeInfo['title'] ?? 'Title not available';
     final imageLinks = volumeInfo['imageLinks'] ?? {};
     final pageCount = volumeInfo['pageCount'] ?? 0;
@@ -28,9 +31,6 @@ class Book {
     final publisher = volumeInfo['publisher'] ?? 'Publisher not available';
     final description = volumeInfo['description'] ?? 'Description not available';
     final publishedDate = volumeInfo['publishedDate'] ?? 'Published date not available';
-
-    final rs = RandomString();
-    String bookKey = rs.getRandomString();
 
     return Book(
       name: name,
@@ -40,6 +40,8 @@ class Book {
       publisher: publisher,
       description: description,
       publishedDate: publishedDate,
+      myReadCount: 0,
+      myReview: null,
     );
   }
 
@@ -51,6 +53,8 @@ class Book {
     var publisher = bookValue["publisher"] ?? '';
     var description = bookValue["description"] ?? '';
     var publishedDate = bookValue["publishedDate"] ?? '';
+    var myReadCount = bookValue["myReadCount"];
+    var myReview = bookValue["myReview"] as String?;
 
     return Book(
       name: name,
@@ -60,6 +64,8 @@ class Book {
       publisher: publisher,
       description: description,
       publishedDate: publishedDate,
+      myReadCount: myReadCount,
+      myReview: myReview,
     );
   }
 }

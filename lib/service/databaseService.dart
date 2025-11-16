@@ -5,11 +5,11 @@ import '../model/Book.dart';
 class DatabaseService {
   DatabaseReference ref = FirebaseDatabase.instance.ref();
 
-  void readDB(void Function(List<Book> newBooks) updateUiWithBooks) {
+  void getBookShelfDB(void Function(List<Book> newBooks) updateUiWithBooks) {
     DatabaseReference readBookRef = FirebaseDatabase.instance.ref(
       'bookshelf/userid',
     );
-    readBookRef.onValue.listen((DatabaseEvent event) {
+    readBookRef.onValue.listen((DatabaseEvent event) async {
       final data = event.snapshot.value;
 
       if (data == null || data is! Map<dynamic, dynamic>) {
@@ -17,23 +17,44 @@ class DatabaseService {
         return;
       }
 
-      final books = <Book>[];
-      for (final key in data.keys) {
+      final futures = data.keys.map((key) async {
         final bookValue = data[key];
-        final book = Book.fromMap(bookValue);
-        books.add(book);
-      }
 
+        final userDataRef = FirebaseDatabase.instance.ref(
+          'userData/userid/$key',
+        );
+        final userDataSnapshot = await userDataRef.get();
+        
+        int? myReadCount;
+        String? myReview;
+        
+        if (userDataSnapshot.exists) {
+          final userData = userDataSnapshot.value as Map<dynamic, dynamic>?;
+          if (userData != null) {
+            myReadCount = userData['myReadCount'] as int?;
+            myReview = userData['myReview'] as String?;
+          }
+        }
+
+        final mergedBookValue = Map<dynamic, dynamic>.from(bookValue);
+        if (myReadCount != null) mergedBookValue['myReadCount'] = myReadCount;
+        if (myReview != null) mergedBookValue['myReview'] = myReview;
+        
+        return Book.fromMap(mergedBookValue);
+      });
+
+      // Future.wait(futures)로 비동기작업들 모두 모아놓고, 바로 전달
+      final books = await Future.wait(futures);
       updateUiWithBooks(books);
     });
   }
 
-  Future<void> writeDB(Book book) async {
-    DatabaseReference ref = FirebaseDatabase.instance.ref(
+  Future<void> writeBookShelfDB(Book book) async {
+    DatabaseReference bookshelfRef = FirebaseDatabase.instance.ref(
       "bookshelf/userid/${book.bookKey}",
     );
 
-    await ref
+    await bookshelfRef
         .set({
           "name": book.name,
           "imageUrl": book.imageUrl,
@@ -44,15 +65,36 @@ class DatabaseService {
           "publishedDate": book.publishedDate,
         })
         .then((_) {
-          print("데이터 넣기 완료");
+          print("책 정보 저장 완료");
         })
         .catchError((error) {
-          print("데이터 넣기 실패");
+          print("책 정보 저장 실패");
         });
-    ;
+
+    if (book.myReadCount != null || book.myReview != null) {
+      DatabaseReference userDataRef = FirebaseDatabase.instance.ref(
+        "userData/userid/${book.bookKey}",
+      );
+      
+      final userData = <String, dynamic>{};
+      if (book.myReadCount != null) {
+        userData['myReadCount'] = book.myReadCount;
+      }
+      if (book.myReview != null && book.myReview!.isNotEmpty) {
+        userData['myReview'] = book.myReview;
+      }
+      
+      if (userData.isNotEmpty) {
+        await userDataRef.update(userData).then((_) {
+          print("사용자 데이터 저장 완료");
+        }).catchError((error) {
+          print("사용자 데이터 저장 실패");
+        });
+      }
+    }
   }
 
-  void updateDB(Book book) {
+  void updateBookShelfDB(Book book) {
     final bookData = {"imageUrl": book.imageUrl};
 
     final bookKeyRef = FirebaseDatabase.instance.ref().child(
@@ -69,10 +111,53 @@ class DatabaseService {
         });
   }
 
-  void deleteDB(Book book) {
+  void deleteBookShelfDB(Book book) {
     final bookKeyRef = FirebaseDatabase.instance.ref().child(
       "bookshelf/userid/${book.bookKey}",
     );
     bookKeyRef.remove();
+  }
+
+  // userData에서 myReadCount와 myReview 읽어오기
+  Future<Map<String, dynamic>?> getUserData(String bookKey) async {
+    final snapshot = await ref
+        .child("userData/userid/$bookKey")
+        .get();
+
+    if (snapshot.exists) {
+      final data = snapshot.value as Map;
+      
+      int? myReadCount;
+      String? myReview;
+
+      if (data["myReadCount"] != null) {
+        myReadCount = data["myReadCount"] is int 
+            ? data["myReadCount"] 
+            : int.tryParse(data["myReadCount"].toString());
+      }
+
+      if (data["myReview"] != null) {
+        myReview = data["myReview"].toString();
+      }
+
+      return {
+        "myReadCount": myReadCount,
+        "myReview": myReview,
+      };
+    }
+    
+    return null;
+  }
+
+  Future<void> updateMyReadCount(String bookKey, int myReadCount) async {
+    await ref.child("userData/userid/$bookKey").update({
+      "myReadCount": myReadCount,
+    });
+  }
+
+  Future<void> updateMyReview(String bookKey, String myReview) async {
+    await ref.child("userData/userid/$bookKey").update({
+      "myReview": myReview,
+    });
   }
 }

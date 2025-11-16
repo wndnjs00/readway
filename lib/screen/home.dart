@@ -60,7 +60,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void prepareBookList() {
-    DatabaseService().readDB(updateUiWithBooks);
+    DatabaseService().getBookShelfDB(updateUiWithBooks);
   }
 }
 

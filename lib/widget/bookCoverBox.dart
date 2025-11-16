@@ -11,6 +11,8 @@ class BookCoverBox extends StatefulWidget {
   final String publisher;
   final String description;
   final String publishedDate;
+  final int myReadCount;
+  final String myReview;
 
   const BookCoverBox({
     required this.imageUrl,
@@ -20,6 +22,8 @@ class BookCoverBox extends StatefulWidget {
     required this.publisher,
     required this.description,
     required this.publishedDate,
+    required this.myReadCount,
+    required this.myReview,
   });
 
   @override
@@ -60,7 +64,7 @@ class _BookCoverBoxState extends State<BookCoverBox> {
 
                 if (isHeartTapped) {
                   // insert data
-                  DatabaseService().writeDB(
+                  DatabaseService().writeBookShelfDB(
                     Book(
                       name: widget.name,
                       imageUrl: widget.imageUrl,
@@ -69,11 +73,13 @@ class _BookCoverBoxState extends State<BookCoverBox> {
                       publisher: widget.publisher,
                       description: widget.description,
                       publishedDate: widget.publishedDate,
+                      myReadCount: widget.myReadCount,
+                      myReview: widget.myReview,
                     ),
                   );
                 } else {
                   // delete data
-                  DatabaseService().deleteDB(
+                  DatabaseService().deleteBookShelfDB(
                     Book(
                       name: widget.name,
                       imageUrl: widget.imageUrl,
@@ -82,6 +88,8 @@ class _BookCoverBoxState extends State<BookCoverBox> {
                       publisher: widget.publisher,
                       description: widget.description,
                       publishedDate: widget.publishedDate,
+                      myReadCount: widget.myReadCount,
+                      myReview: widget.myReview,
                     ),
                   );
                 }
