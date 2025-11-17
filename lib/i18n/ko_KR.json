@@ -1,0 +1,37 @@
+{
+  "title-not-available": "제목 정보가 없습니다",
+  "publisher-not-available": "출판사 정보가 없습니다",
+  "description-not-available": "설명 정보가 없습니다",
+  "published-date-not-available": "출판일 정보가 없습니다",
+
+  "please-enter-a-valid-page-number": "올바른 페이지 수를 입력하세요.",
+  "detail-page": "디테일 화면",
+  "published-date": "출판일: ",
+  "reading-progress": "독서 진행상황",
+  "page": "페이지",
+  "save": "기록",
+  "completed": "완료",
+  "my-review": "나의 리뷰",
+  "share-your-thoughts-about-this-book": "이 책에 대한 생각을 자유롭게 적어보세요...",
+  "submit-review": "리뷰 작성 완료",
+  "complete": "● 작성 완료",
+  "edit": "수정",
+
+  "no-liked-books-add-a-bookshelf": "좋아요한 책이 없습니다\n책장을 추가해보세요",
+
+  "search-for-something": "책을 검색해보세요",
+  "no-results-found": "검색 결과가 없습니다",
+  "search-for-a-book": "책 제목을 검색해주세요",
+
+  "error": "에러",
+
+  "home": "홈",
+  "search": "검색",
+
+  "book-information-saved": "책 정보 저장 완료",
+  "failed-to-save-book-information": "책 정보 저장 실패",
+  "user-data-saved": "사용자 데이터 저장 완료",
+  "failed-to-save-user-data": "사용자 데이터 저장 실패",
+  "data-updated": "데이터 업데이트 완료",
+  "failed-to-update-data": "데이터 업데이트 실패"
+}
