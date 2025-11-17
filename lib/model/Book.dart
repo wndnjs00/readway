@@ -19,8 +19,8 @@ class Book {
     required this.publisher,
     required this.description,
     required this.publishedDate,
-    required this.myReadCount,
-    required this.myReview,
+    this.myReadCount,
+    this.myReview,
   });
 
   factory Book.fromJson(Map<String, dynamic> json) {

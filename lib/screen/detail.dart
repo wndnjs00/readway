@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../model/Book.dart';
-import '../service/databaseService.dart';
+import '../viewmodel/book_viewmodel.dart';
 import 'package:localization/localization.dart';
 
-class DetailScreen extends StatefulWidget {
+class DetailScreen extends ConsumerStatefulWidget {
   final Book book;
 
   const DetailScreen({super.key, required this.book});
 
   @override
-  State<DetailScreen> createState() => _DetailScreenState();
+  ConsumerState<DetailScreen> createState() => _DetailScreenState();
 }
 
-class _DetailScreenState extends State<DetailScreen>{
-  final DatabaseService _databaseService = DatabaseService();
+class _DetailScreenState extends ConsumerState<DetailScreen> {
   final TextEditingController progressController = TextEditingController();
   final TextEditingController reviewController = TextEditingController();
 
@@ -27,7 +27,8 @@ class _DetailScreenState extends State<DetailScreen>{
   }
 
   void _loadData() async {
-    final userData = await _databaseService.getUserData(widget.book.bookKey);
+    final repository = ref.read(bookRepositoryProvider);
+    final userData = await repository.getUserData(widget.book.bookKey);
 
     if (userData != null) {
       setState(() {
@@ -72,7 +73,8 @@ class _DetailScreenState extends State<DetailScreen>{
       return;
     }
 
-    _databaseService.updateMyReadCount(widget.book.bookKey, inputMyReadCount);
+    final repository = ref.read(bookRepositoryProvider);
+    repository.updateMyReadCount(widget.book.bookKey, inputMyReadCount);
 
     setState(() {
       myReadCount = inputMyReadCount;
@@ -83,7 +85,8 @@ class _DetailScreenState extends State<DetailScreen>{
     String inputMyReview = reviewController.text.trim();
     if (inputMyReview.isEmpty) return;
 
-    _databaseService.updateMyReview(widget.book.bookKey, inputMyReview);
+    final repository = ref.read(bookRepositoryProvider);
+    repository.updateMyReview(widget.book.bookKey, inputMyReview);
 
     setState(() {
       myReview = inputMyReview;
@@ -105,7 +108,6 @@ class _DetailScreenState extends State<DetailScreen>{
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
-          // 추가
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -147,7 +149,7 @@ class _DetailScreenState extends State<DetailScreen>{
                         ),
                         Text(widget.book.publisher),
                         Text(
-                          "published-date ${widget.book.publishedDate}".i18n(),
+                          '${"published-date".i18n()} ${widget.book.publishedDate}',
                           style: const TextStyle(color: Colors.grey),
                         ),
                       ],
@@ -229,7 +231,7 @@ class _DetailScreenState extends State<DetailScreen>{
               const SizedBox(height: 5),
 
               Text(
-                "${(progressPercent * 100).toStringAsFixed(1)}% completed".i18n(),
+                "${(progressPercent * 100).toStringAsFixed(1)}% ${"completed".i18n()}",
                 style: const TextStyle(fontSize: 12, color: Colors.grey),
               ),
 
@@ -245,7 +247,6 @@ class _DetailScreenState extends State<DetailScreen>{
               ),
               const SizedBox(height: 12),
 
-              // 리뷰가 DB에 없을 때 → 입력 UI
               if (myReview == null || myReview!.trim().isEmpty) ...[
                 TextField(
                   controller: reviewController,
@@ -269,7 +270,6 @@ class _DetailScreenState extends State<DetailScreen>{
                   child: Text("submit-review".i18n()),
                 ),
               ]
-              // 리뷰가 있을 때 → 완료 UI
               else ...[
                 Container(
                   padding: const EdgeInsets.all(16),
@@ -293,7 +293,6 @@ class _DetailScreenState extends State<DetailScreen>{
                 const SizedBox(height: 16),
                 ElevatedButton(
                   onPressed: () {
-                    // 수정모드로 전환
                     reviewController.text = myReview!;
                     setState(() => myReview = null);
                   },

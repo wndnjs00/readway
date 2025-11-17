@@ -1,9 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:readway/model/Book.dart';
-import 'package:readway/service/databaseService.dart';
+import 'package:readway/viewmodel/book_viewmodel.dart';
 
-class BookCoverBox extends StatefulWidget {
+class BookCoverBox extends ConsumerStatefulWidget {
   final String imageUrl;
   final String name;
   final String bookKey;
@@ -11,8 +12,6 @@ class BookCoverBox extends StatefulWidget {
   final String publisher;
   final String description;
   final String publishedDate;
-  final int myReadCount;
-  final String myReview;
 
   const BookCoverBox({
     required this.imageUrl,
@@ -22,15 +21,13 @@ class BookCoverBox extends StatefulWidget {
     required this.publisher,
     required this.description,
     required this.publishedDate,
-    required this.myReadCount,
-    required this.myReview,
   });
 
   @override
-  State<BookCoverBox> createState() => _BookCoverBoxState();
+  ConsumerState<BookCoverBox> createState() => _BookCoverBoxState();
 }
 
-class _BookCoverBoxState extends State<BookCoverBox> {
+class _BookCoverBoxState extends ConsumerState<BookCoverBox> {
   bool isHeartTapped = false;
 
   @override
@@ -62,9 +59,11 @@ class _BookCoverBoxState extends State<BookCoverBox> {
               setState(() {
                 isHeartTapped = !isHeartTapped;
 
+                final repository = ref.read(bookRepositoryProvider);
+
                 if (isHeartTapped) {
                   // insert data
-                  DatabaseService().writeBookShelfDB(
+                  repository.writeBookShelf(
                     Book(
                       name: widget.name,
                       imageUrl: widget.imageUrl,
@@ -73,13 +72,11 @@ class _BookCoverBoxState extends State<BookCoverBox> {
                       publisher: widget.publisher,
                       description: widget.description,
                       publishedDate: widget.publishedDate,
-                      myReadCount: widget.myReadCount,
-                      myReview: widget.myReview,
                     ),
                   );
                 } else {
                   // delete data
-                  DatabaseService().deleteBookShelfDB(
+                  repository.deleteBookShelf(
                     Book(
                       name: widget.name,
                       imageUrl: widget.imageUrl,
@@ -88,8 +85,6 @@ class _BookCoverBoxState extends State<BookCoverBox> {
                       publisher: widget.publisher,
                       description: widget.description,
                       publishedDate: widget.publishedDate,
-                      myReadCount: widget.myReadCount,
-                      myReview: widget.myReview,
                     ),
                   );
                 }

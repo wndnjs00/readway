@@ -1,56 +1,19 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:localization/localization.dart';
 
-import '../model/Book.dart';
+import '../../model/Book.dart';
 
-class DatabaseService {
+class BookDataSource {
   DatabaseReference ref = FirebaseDatabase.instance.ref();
 
-  void getBookShelfDB(void Function(List<Book> newBooks) updateUiWithBooks) {
+  Stream<DatabaseEvent> getBookShelfStream() {
     DatabaseReference readBookRef = FirebaseDatabase.instance.ref(
       'bookshelf/userid',
     );
-    readBookRef.onValue.listen((DatabaseEvent event) async {
-      final data = event.snapshot.value;
-
-      if (data == null || data is! Map<dynamic, dynamic>) {
-        updateUiWithBooks([]);
-        return;
-      }
-
-      final futures = data.keys.map((key) async {
-        final bookValue = data[key];
-
-        final userDataRef = FirebaseDatabase.instance.ref(
-          'userData/userid/$key',
-        );
-        final userDataSnapshot = await userDataRef.get();
-        
-        int? myReadCount;
-        String? myReview;
-        
-        if (userDataSnapshot.exists) {
-          final userData = userDataSnapshot.value as Map<dynamic, dynamic>?;
-          if (userData != null) {
-            myReadCount = userData['myReadCount'] as int?;
-            myReview = userData['myReview'] as String?;
-          }
-        }
-
-        final mergedBookValue = Map<dynamic, dynamic>.from(bookValue);
-        if (myReadCount != null) mergedBookValue['myReadCount'] = myReadCount;
-        if (myReview != null) mergedBookValue['myReview'] = myReview;
-        
-        return Book.fromMap(mergedBookValue);
-      });
-
-      // Future.wait(futures)로 비동기작업들 모두 모아놓고, 바로 전달
-      final books = await Future.wait(futures);
-      updateUiWithBooks(books);
-    });
+    return readBookRef.onValue;
   }
 
-  Future<void> writeBookShelfDB(Book book) async {
+  Future<void> writeBookShelf(Book book) async {
     DatabaseReference bookshelfRef = FirebaseDatabase.instance.ref(
       "bookshelf/userid/${book.bookKey}",
     );
@@ -95,7 +58,7 @@ class DatabaseService {
     }
   }
 
-  void updateBookShelfDB(Book book) {
+  void updateBookShelf(Book book) {
     final bookData = {"imageUrl": book.imageUrl};
 
     final bookKeyRef = FirebaseDatabase.instance.ref().child(
@@ -112,14 +75,13 @@ class DatabaseService {
         });
   }
 
-  void deleteBookShelfDB(Book book) {
+  void deleteBookShelf(Book book) {
     final bookKeyRef = FirebaseDatabase.instance.ref().child(
       "bookshelf/userid/${book.bookKey}",
     );
     bookKeyRef.remove();
   }
 
-  // userData에서 myReadCount와 myReview 읽어오기
   Future<Map<String, dynamic>?> getUserData(String bookKey) async {
     final snapshot = await ref
         .child("userData/userid/$bookKey")
@@ -161,4 +123,18 @@ class DatabaseService {
       "myReview": myReview,
     });
   }
+
+  Future<Map<dynamic, dynamic>?> getUserDataByKey(String bookKey) async {
+    final userDataRef = FirebaseDatabase.instance.ref(
+      'userData/userid/$bookKey',
+    );
+    final userDataSnapshot = await userDataRef.get();
+    
+    if (userDataSnapshot.exists) {
+      return userDataSnapshot.value as Map<dynamic, dynamic>?;
+    }
+    
+    return null;
+  }
 }
+

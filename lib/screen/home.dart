@@ -1,34 +1,19 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:localization/localization.dart';
 import 'package:readway/screen/detail.dart';
-import 'package:readway/service/databaseService.dart';
+import 'package:readway/viewmodel/book_viewmodel.dart';
 
 import '../model/Book.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final booksAsync = ref.watch(bookViewModelProvider);
 
-class _HomeScreenState extends State<HomeScreen> {
-  List<Book> books = [];
-
-  @override
-  void initState() {
-    super.initState();
-    prepareBookList();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
         body: SingleChildScrollView(
@@ -37,31 +22,27 @@ class _HomeScreenState extends State<HomeScreen> {
               Container(
                 height: MediaQuery.of(context).size.height,
                 alignment: Alignment.center,
-                child: books.isNotEmpty
-                    ? _buildBookList(context, books)
-                    : Text(
-                        "no-liked-books-add-a-bookshelf".i18n(),
-                        textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 18, color: Colors.grey),
-                      ),
+                child: booksAsync.when(
+                  data: (books) => books.isNotEmpty
+                      ? _buildBookList(context, books)
+                      : Text(
+                          "no-liked-books-add-a-bookshelf".i18n(),
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 18, color: Colors.grey),
+                        ),
+                  loading: () => const CircularProgressIndicator(),
+                  error: (error, stack) => Text(
+                    "error-loading-books".i18n(),
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 18, color: Colors.red),
+                  ),
+                ),
               ),
             ],
           ),
         ),
       ),
     );
-  }
-
-  void updateUiWithBooks(List<Book> newBooks) {
-    if (mounted) {
-      setState(() {
-        books = newBooks;
-      });
-    }
-  }
-
-  void prepareBookList() {
-    DatabaseService().getBookShelfDB(updateUiWithBooks);
   }
 }
 

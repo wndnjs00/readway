@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:localization/localization.dart';
-import 'package:readway/service/bookApi.dart';
-import 'package:readway/widget/bookCoverBox.dart';
+import 'package:readway/data/datasource/googleApi.dart';
+import 'package:readway/screen/widget/bookCoverBox.dart';
 
 import '../model/Book.dart';
 import 'detail.dart';
@@ -97,8 +97,6 @@ class _SearchScreenState extends State<SearchScreen> {
                 publisher: books[index].publisher,
                 description: books[index].description,
                 publishedDate: books[index].publishedDate,
-                myReadCount: books[index].myReadCount ?? 0,
-                myReview: books[index].myReview ?? '',
               ),
             ),
           );
