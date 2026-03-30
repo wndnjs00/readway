@@ -43,3 +43,11 @@
 - 좋아요 기능 고도화
 - 월별 독서 차트 추가
 - AOS, IOS 배포예정
+
+
+
+---
+
+### 서비스 구조 도식화
+
+<img src="https://github.com/user-attachments/assets/e3bcb8be-e828-4f75-9de7-aa665de23ce2" />
